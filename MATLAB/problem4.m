@@ -52,7 +52,7 @@ xf   = [0 0 0 0 0 0]';
 
 % Time horizon and initialization
 
-N  = 40;                                % Time horizon for states
+N  = 60;                                % Time horizon for states
 M  = N;                                 % Time horizon for inputs
 z  = [x0; kron(ones(N-1,1), [0;0;0;0;0;0.1]); kron(ones(N,1), [0;0.1])];      % Initialize z for the whole horizon
 z0 = z;                                 % Initial value for optimization
@@ -66,6 +66,10 @@ xl      = -Inf*ones(mx,1);              % Lower bound on states (no bound)
 xu      = Inf*ones(mx,1);               % Upper bound on states (no bound)
 xl(3)   = ul(1);                           % Lower bound on state x3
 xu(3)   = uu(1);                           % Upper bound on state x3
+%xl(4)   = -1;
+%xu(4)   = 1;
+%xl(6)   = -1;
+%xu(6)   = 1;
 
 % Generate constraints on measurements and inputs
 
@@ -97,21 +101,37 @@ Aeq = [ Aeq; [zeros(mx,(N-1)*mx), eye(6), zeros(mx,N*mu)]];
 
 beq = [A1*x0; zeros((N-1)*mx,1); xf];      % Generate b
 
-ud = 0.5;
-Au = zeros(N*mu*2-2,N*mu);
-j = [-1; 1; 1; -1];
-for i = 2:N*mu-1
-    Au(2*i-3:2*i,i)=j;
+ud1 = 5.2;
+ud2 = 5.05;
+Au = zeros(N*mu*2-4,N*mu);
+j = [1 0 -1; -1 0 1];
+
+for i = 1:2*N-2
+    Au(i*2-1:i*2,i:i+2)=j;
 end
-A = [zeros(N*mu*2-2,N*mx), Au];
-b = ones(N*mu*2-2,1)*ud;
+
+Au = [1 zeros(1,size(Au,2)-1);
+    -1 zeros(1,size(Au,2)-1);
+    0 1 zeros(1,size(Au,2)-2);
+    0 -1 zeros(1,size(Au,2)-2);
+    Au;
+    zeros(1,size(Au,2)-2) 1 0;
+    zeros(1,size(Au,2)-2) -1 0;
+    zeros(1,size(Au,2)-1) 1;
+    zeros(1,size(Au,2)-1) -1;];
+
+A = [zeros(N*mu*2+4,N*mx), Au];
+b = kron(ones(N-1,1),[ud1;ud1;ud2;ud2]);
+
+b = [ud1; ud1; ud2; ud2; b; ud1; ud1; ud2; ud2]
 
 % Solve Qp problem with linear model
 %options = optimset('Display','notify', 'Diagnostics','off', 'LargeScale','off', 'Algorithm','active-set');
 phi = @ (x) (x'*Q*x);
-options = optimset('Display','notify', 'Diagnostics','on','MaxFunEvals',32000*2);
+options = optimset('Display','notify', 'Diagnostics','on','MaxFunEvals',Inf,'MaxIter',Inf);
 tic
-[z, lambda] = fmincon(phi, z0,A,b,Aeq,beq,vlb,vub,@constr4,options);
+%[z, lambda] = fmincon(phi, z0,A,b,Aeq,beq,vlb,vub,@constr4,options);
+[z, lambda] = fmincon(phi, z0,[],[],Aeq,beq,vlb,vub,@constr4,options);
 %[z,lambda] = quadprog(Q,[],[],[],Aeq,beq,vlb,vub);
 t1=toc
 
