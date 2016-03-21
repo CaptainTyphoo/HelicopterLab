@@ -23,7 +23,7 @@ Ac = [ 0 1 0 0 0 0;
        0 0 0 1 0 0; 
        0 0 -K_1*K_pp -K_1*K_pd 0 0
        0 0 0 0 0 1;
-       0 0 0 0 -K_3*K_ep, K_3*K_ed];
+       0 0 0 0 -K_3*K_ep, -K_3*K_ed];
 Bc = [0 0; 
       0 0 ; 
       0 0 ; 
@@ -54,13 +54,13 @@ xf   = [0 0 0 0 0 0]';
 
 N  = 40;                                % Time horizon for states
 M  = N;                                 % Time horizon for inputs
-z  = zeros(N*mx+M*mu,1);                % Initialize z for the whole horizon
+z  = [x0; kron(ones(N-1,1), [0;0;0;0;0;0.1]); kron(ones(N,1), [0;0.1])];      % Initialize z for the whole horizon
 z0 = z;                                 % Initial value for optimization
 
 % Bounds
 
-ul 	    = [-30*pi/180; -Inf];                   % Lower bound on control -- u1, u2
-uu 	    = [30*pi/180; Inf];                    % Upper bound on control -- u1, u2
+ul 	    = [-30*pi/180; -60*pi/180];                   % Lower bound on control -- u1, u2
+uu 	    = [30*pi/180; 60*pi/180];                    % Upper bound on control -- u1, u2
 
 xl      = -Inf*ones(mx,1);              % Lower bound on states (no bound)
 xu      = Inf*ones(mx,1);               % Upper bound on states (no bound)
@@ -82,8 +82,8 @@ Q1(1,1) = 1;                             % Weight on state x1
 %Q1(2,2) = ;                            % Weight on state x2
 Q1(3,3) = 0;                             % Weight on state x3
 %Q1(4,4) = ;                            % Weight on state x4
-P1 = diag([1,1]);                                 % Weight on input
-Q = 2*genq2(Q1,P1,N,M,mu);              % Generate Q
+P1 = diag([1,2]);                                 % Weight on input
+Q = genq2(Q1,P1,N,M,mu);              % Generate Q
 c = zeros(N*mx+M*mu,1);                 % Generate c
 
 % Generate system matrixes for linear model
@@ -95,15 +95,25 @@ c = zeros(N*mx+M*mu,1);                 % Generate c
 Aeq = gena2(A1,B1,N,mx,mu);
 Aeq = [ Aeq; [zeros(mx,(N-1)*mx), eye(6), zeros(mx,N*mu)]];
 
-beq = [A1*x0; zeros((N-1)*mx,1);xf];      % Generate b
+beq = [A1*x0; zeros((N-1)*mx,1); xf];      % Generate b
+
+ud = 0.5;
+Au = zeros(N*mu*2-2,N*mu);
+j = [-1; 1; 1; -1];
+for i = 2:N*mu-1
+    Au(2*i-3:2*i,i)=j;
+end
+A = [zeros(N*mu*2-2,N*mx), Au];
+b = ones(N*mu*2-2,1)*ud;
 
 % Solve Qp problem with linear model
 %options = optimset('Display','notify', 'Diagnostics','off', 'LargeScale','off', 'Algorithm','active-set');
 phi = @ (x) (x'*Q*x);
+options = optimset('Display','notify', 'Diagnostics','on','MaxFunEvals',32000*2);
 tic
-[z, lambda] = fmincon(phi,zeros(N*mx+N*mu,1),[],[],Aeq,beq,vlb,vub, @constr4)
+[z, lambda] = fmincon(phi, z0,A,b,Aeq,beq,vlb,vub,@constr4,options);
 %[z,lambda] = quadprog(Q,[],[],[],Aeq,beq,vlb,vub);
-t1=toc;
+t1=toc
 
 
 % Calculate objective value
@@ -141,7 +151,7 @@ x3  = [Nuller; x3; Nuller];
 x4  = [Nuller; x4; Nuller];
 x5  = [Nuller; x5; Nuller];
 x6  = [Nuller; x6; Nuller];
-
+u =  [u1 u2];
 %save trajektor1ny
 
 % figure
@@ -171,7 +181,7 @@ ylabel('u2')
 subplot(312)
 plot(t,x5,'m',t,x5,'mo'),grid
 ylabel('e')
-subplot(513)
+subplot(313)
 plot(t,x6,'m',t,x6','mo'),grid
 ylabel('e_dot')
 
