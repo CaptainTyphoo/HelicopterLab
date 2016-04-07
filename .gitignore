@@ -7,5 +7,16 @@
 *.mexw32
 *.mexw64
 *.rt-win64
+*.aux
+*.m~
+*.blg
+*.log
+*.auxlock
+*.toc
+*.synctex.gz
+*.out
+*.pdf
+*.bbl
 slprj/
 **/slprj/
+Report/pgfplots/
