@@ -1,0 +1,195 @@
+
+\newcommand{\ProblemTwoPlot}[2]{
+	\begin{tikzpicture}
+	\begin{groupplot}[
+	group style={
+		group name=ioverlauf,
+		group size=1 by 4,
+		%
+		%xlabels at=edge bottom,
+		ylabels at=edge left,
+		x descriptions at=edge bottom,
+		horizontal sep=1.25cm,
+		vertical sep=0.375cm
+	},
+	width=0.95\linewidth,
+	height=0.28\textheight,
+	grid,
+	xlabel={$t$ in \si{\second}},
+	ylabsh=-3.5em
+	]
+	\nextgroupplot[ 
+	ylabel={$\lambda$} in \si{\degree},legend to name=travel]
+	\addplot[color=blue] table[x=t,y expr=\thisrow{lambda}+180] {#1};
+	\addlegendentry{measured}
+	\addplot[color=red, const plot] table[x=t,y expr=\thisrow{lambda}*180/pi] {#2};
+	\addlegendentry{optimal}
+	
+	\nextgroupplot[ 
+	ylabel={$p$} in \si{\degree},legend to name=pitch]
+	\addplot[color=blue] table[x=t,y=p] {#1};
+	\addlegendentry{measured}
+	\addplot[color=red, const plot] table[x=t,y expr=\thisrow{p}*180/pi] {#2};
+	\addlegendentry{optimal}
+	
+	\nextgroupplot[ 
+	ylabel={$e$} in \si{\degree},legend to name=elevation]
+	\addplot[color=blue] table[x=t,y=e] {#1};
+	\addlegendentry{measured}
+	
+	\nextgroupplot[ 
+	ylabel={$u$} in \si{1},legend to name=input]
+	\addplot[color=blue] table[x=t,y=u] {#1};
+	\addlegendentry{measured}
+	\addplot[color=red, const plot] table[x=t,y=u] {#2};
+	\addlegendentry{optimal}
+	
+	\end{groupplot}
+	
+	\node at (ioverlauf c1r1.east) [anchor=east, xshift=-0.3cm, yshift=0.0cm]
+	{\pgfplotslegendfromname{travel}};
+	\node at (ioverlauf c1r2.east) [anchor=east, xshift=-0.3cm, yshift=1.5cm]
+	{\pgfplotslegendfromname{pitch}};
+	\node at (ioverlauf c1r3.east) [anchor=east, xshift=-0.3cm, yshift=0.0cm]
+	{\pgfplotslegendfromname{elevation}};
+	\node at (ioverlauf c1r4.east) [anchor=east, xshift=-0.3cm, yshift=1.5cm]
+	{\pgfplotslegendfromname{input}};
+	
+	\end{tikzpicture}
+}
+
+
+\newcommand{\ProblemThreePlot}[2]{
+	\begin{tikzpicture}
+	\begin{groupplot}[
+	group style={
+		group name=ioverlauf,
+		group size=1 by 4,
+		%
+		%xlabels at=edge bottom,
+		ylabels at=edge left,
+		x descriptions at=edge bottom,
+		horizontal sep=1.25cm,
+		vertical sep=0.375cm
+	},
+	width=0.95\linewidth,
+	height=0.28\textheight,
+	grid,
+	xlabel={$t$ in \si{\second}},
+	ylabsh=-3.5em
+	]
+	\nextgroupplot[ 
+	ylabel={$\lambda$} in \si{\degree},legend to name=travel]
+	\addplot[color=blue] table[x=t,y expr=\thisrow{lambda}+180] {#1};
+	\addlegendentry{measured}
+	\addplot[color=red, const plot] table[x=t,y expr=\thisrow{lambda}*180/pi] {#2};
+	\addlegendentry{optimal}
+	
+	\nextgroupplot[ 
+	ylabel={$p$} in \si{\degree},legend to name=pitch]
+	\addplot[color=blue] table[x=t,y=p] {#1};
+	\addlegendentry{measured}
+	\addplot[color=red, const plot] table[x=t,y expr=\thisrow{p}*180/pi] {#2};
+	\addlegendentry{optimal}
+	
+	\nextgroupplot[ 
+	ylabel={$e$} in \si{\degree},legend to name=elevation]
+	\addplot[color=blue] table[x=t,y=e] {#1};
+	\addlegendentry{measured}
+	
+	\nextgroupplot[ 
+	ylabel={$u$} in \si{1},legend to name=input]
+	\addplot[color=blue] table[x=t,y=u] {#1};
+	\addlegendentry{measured}
+	\addplot[color=green, const plot] table[x=t,y=uopt] {#1};
+	\addlegendentry{optimal measured?}
+	\addplot[color=red, const plot] table[x=t,y=u] {#2};
+	\addlegendentry{optimal}
+	
+	\end{groupplot}
+	
+	\node at (ioverlauf c1r1.east) [anchor=east, xshift=-0.3cm, yshift=0.0cm]
+	{\pgfplotslegendfromname{travel}};
+	\node at (ioverlauf c1r2.east) [anchor=east, xshift=-0.3cm, yshift=1.5cm]
+	{\pgfplotslegendfromname{pitch}};
+	\node at (ioverlauf c1r3.east) [anchor=east, xshift=-0.3cm, yshift=0.0cm]
+	{\pgfplotslegendfromname{elevation}};
+	\node at (ioverlauf c1r4.east) [anchor=east, xshift=-0.3cm, yshift=1.3cm]
+	{\pgfplotslegendfromname{input}};
+	
+	\end{tikzpicture}
+}
+
+\newcommand{\ProblemFourPlot}[2]{
+	\begin{tikzpicture}
+	\begin{groupplot}[
+	group style={
+		group name=ioverlauf,
+		group size=1 by 5,
+		%
+		%xlabels at=edge bottom,
+		ylabels at=edge left,
+		x descriptions at=edge bottom,
+		horizontal sep=1.25cm,
+		vertical sep=0.375cm
+	},
+	width=0.95\linewidth,
+	height=0.24\textheight,
+	grid,
+	xlabel={$t$ in \si{\second}},
+	ylabsh=-3.5em
+	]
+	\nextgroupplot[ 
+	ylabel={$\lambda$} in \si{\degree},legend to name=travel]
+	\addplot[color=blue] table[x=t,y expr=\thisrow{lambda}+180] {#1};
+	\addlegendentry{measured}
+	\addplot[color=red, const plot] table[x=t,y expr=\thisrow{lambda}*180/pi] {#2};
+	\addlegendentry{optimal}
+	
+	\nextgroupplot[ 
+	ylabel={$p$} in \si{\degree},legend to name=pitch]
+	\addplot[color=blue] table[x=t,y=p] {#1};
+	\addlegendentry{measured}
+	\addplot[color=red, const plot] table[x=t,y expr=\thisrow{p}*180/pi] {#2};
+	\addlegendentry{optimal}
+	
+	\nextgroupplot[ 
+	ylabel={$e$} in \si{\degree},legend to name=elevation]
+	\addplot[color=blue] table[x=t,y=e] {#1};
+	\addlegendentry{measured}
+	\addplot[color=red, const plot] table[x=t,y expr=\thisrow{e}*180/pi] {#2};
+	\addlegendentry{optimal}
+	
+	\nextgroupplot[ 
+	ylabel={$u_1$} in \si{1},legend to name=input1]
+	\addplot[color=blue] table[x=t,y=u1] {#1};
+	\addlegendentry{measured}
+	\addplot[color=green, const plot] table[x=t,y=u1opt] {#1};
+	\addlegendentry{optimal measured?}
+	\addplot[color=red, const plot] table[x=t,y=u1] {#2};
+	\addlegendentry{optimal}
+	
+	\nextgroupplot[ 
+	ylabel={$u_2$} in \si{1},legend to name=input2]
+	\addplot[color=blue] table[x=t,y=u2] {#1};
+	\addlegendentry{measured}
+	\addplot[color=green, const plot] table[x=t,y=u2opt] {#1};
+	\addlegendentry{optimal measured?}
+	\addplot[color=red, const plot] table[x=t,y=u2] {#2};
+	\addlegendentry{optimal}
+	
+	\end{groupplot}
+	
+	\node at (ioverlauf c1r1.east) [anchor=east, xshift=-0.3cm, yshift=0.0cm]
+	{\pgfplotslegendfromname{travel}};
+	\node at (ioverlauf c1r2.east) [anchor=east, xshift=-0.3cm, yshift=-1.0cm]
+	{\pgfplotslegendfromname{pitch}};
+	\node at (ioverlauf c1r3.east) [anchor=east, xshift=-0.3cm, yshift=-1.0cm]
+	{\pgfplotslegendfromname{elevation}};
+	\node at (ioverlauf c1r4.east) [anchor=east, xshift=-0.3cm, yshift=1.3cm]
+	{\pgfplotslegendfromname{input1}};
+	\node at (ioverlauf c1r5.east) [anchor=east, xshift=-0.3cm, yshift=0.8cm]
+	{\pgfplotslegendfromname{input2}};
+	
+	\end{tikzpicture}
+}
