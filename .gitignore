@@ -20,3 +20,5 @@
 slprj/
 **/slprj/
 Report/pgfplots/
+MATLAB/._*
+*._*

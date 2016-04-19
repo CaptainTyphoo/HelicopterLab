@@ -1,8 +1,9 @@
 %% Optimal control of Pitch/Travel with Feedback(LQ)
-
+init01;
 problem2;
 
-LQR.Q = diag([10, 1, 5, 0]);
+% [lambda r p p_dot]
+LQR.Q = diag([1, 0, 10, 0]);
 LQR.R = 0.5;
 
 K = dlqr(A1, B1, LQR.Q, LQR.R);

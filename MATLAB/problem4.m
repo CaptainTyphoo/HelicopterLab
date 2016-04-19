@@ -66,8 +66,8 @@ xl      = -Inf*ones(mx,1);              % Lower bound on states (no bound)
 xu      = Inf*ones(mx,1);               % Upper bound on states (no bound)
 xl(3)   = ul(1);                           % Lower bound on state x3
 xu(3)   = uu(1);                           % Upper bound on state x3
-%xl(4)   = -1;
-%xu(4)   = 1;
+xl(4)   = ul(1);
+xu(4)   = uu(1);
 %xl(6)   = -1;
 %xu(6)   = 1;
 
@@ -123,12 +123,12 @@ Au = [1 zeros(1,size(Au,2)-1);
 A = [zeros(N*mu*2+4,N*mx), Au];
 b = kron(ones(N-1,1),[ud1;ud1;ud2;ud2]);
 
-b = [ud1; ud1; ud2; ud2; b; ud1; ud1; ud2; ud2]
+b = [ud1; ud1; ud2; ud2; b; ud1; ud1; ud2; ud2];
 
 % Solve Qp problem with linear model
 %options = optimset('Display','notify', 'Diagnostics','off', 'LargeScale','off', 'Algorithm','active-set');
 phi = @ (x) (x'*Q*x);
-options = optimset('Display','notify', 'Diagnostics','on','MaxFunEvals',Inf,'MaxIter',Inf);
+options = optimset('Display','notify', 'Diagnostics','on','MaxFunEvals',Inf,'MaxIter',Inf, 'TolCon', 480);%,'TolX', Inf);
 tic
 %[z, lambda] = fmincon(phi, z0,A,b,Aeq,beq,vlb,vub,@constr4,options);
 [z, lambda] = fmincon(phi, z0,[],[],Aeq,beq,vlb,vub,@constr4,options);
@@ -173,9 +173,11 @@ x5  = [Nuller; x5; Nuller];
 x6  = [Nuller; x6; Nuller];
 u =  [u1 u2];
 %save trajektor1ny
-
+%%
+ K = 0;
 % figure
 t = 0:delta_t:delta_t*(length(u1)-1);                % real time
+
 
 figure(2)
 subplot(511)

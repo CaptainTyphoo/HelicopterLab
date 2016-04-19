@@ -6,45 +6,46 @@
 %plot(scope_travel.time, scope_travel.signals.values);
 
 figure(6);
+folder='helicopter4\';
+load([folder, 'optinput4.mat']);
+load([folder, 'input4.mat']);
+load([folder, 'travel4.mat']);
+load([folder, 'pitch4.mat']);
+load([folder, 'elevation4.mat']);
 
-load('optinput3.mat');
-load('input2.mat');
-load('travel2.mat');
-load('pitch2.mat');
-load('elevation2.mat');
 
 
 subplot(611);
-plot(input2(1,:), input2(2,:));
+plot(input4(1,:), input4(2,:));
 title('Input');
 
 subplot(612)
-plot(optinput3(1,:), optinput3(2,:));
+plot(optinput4(1,:), optinput4(2,:));
 hold on;
-plot(input2(1,:), input2(2,:), 'g');
+plot(input4(1,:), input4(2,:), 'g');
 
 title('OptimalInput');
 
 subplot(613)
-plot(travel2(1,:), travel2(2,:));
+plot(travel4(1,:), travel4(2,:));
 title('Travel');
 hold on;
 plot(t,x1*(180/pi)-180, 'r');
 
 subplot(614)
-plot(pitch2(1,:), pitch2(2,:));
+plot(pitch4(1,:), pitch4(2,:));
 title('Pitch');
 hold on;
 plot(t,x3*(180/pi), 'r');
 
 subplot(615)
-plot(optinput3(1,:), optinput3(3,:));
+plot(optinput4(1,:), optinput4(3,:));
 title('input 2');
 hold on;
-plot(input2(1,:), input2(3,:), 'g');
+plot(input4(1,:), input4(3,:), 'g'); % I mayv have broken this
 
 subplot(616)
-plot(elevation2(1,:), elevation2(2,:));
+plot(elevation4(1,:), elevation4(2,:));
 title('Elevation');
 hold on;
 plot(t,x5*(180/pi), 'r');
