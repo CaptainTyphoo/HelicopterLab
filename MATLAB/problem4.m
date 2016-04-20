@@ -66,10 +66,10 @@ xl      = -Inf*ones(mx,1);              % Lower bound on states (no bound)
 xu      = Inf*ones(mx,1);               % Upper bound on states (no bound)
 xl(3)   = ul(1);                           % Lower bound on state x3
 xu(3)   = uu(1);                           % Upper bound on state x3
-xl(4)   = ul(1);
-xu(4)   = uu(1);
-%xl(6)   = -1;
-%xu(6)   = 1;
+xl(2)   = -0.2;
+xu(2)   = 0.2;
+xl(6)   = -0.1;
+xu(6)   = 0.1;
 
 % Generate constraints on measurements and inputs
 
