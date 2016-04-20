@@ -61,6 +61,35 @@ for i = 1:numel(name1)
 
 end
 
+%% problem 3 second tround
+
+name1 = {
+    'LQR[1,0,10,10]',
+    'LQR[1,0,10,0]',
+    'LQR[5,0,0,5]',
+    'LQR[10,1,5,0]'
+    };
+name2 = {
+    'elevation3.mat',
+    'input3.mat',
+    'pitch3.mat',
+    'travel3.mat',
+    'optinput3.mat'
+    };
+for i = 1:numel(name1)
+    i=name1{i}
+    for k = 1:numel(name2)
+        filename = strcat('./helicopter3/',i,'/',name2{k});
+        load(filename)
+    end
+    
+    csvwrite_with_headers(strcat('./Export/problem3_',i,'.csv'),...
+      downsample([input3(1,:)',input3(2,:)',travel3(2,:)',pitch3(2,:)',...
+      elevation3(2,:)',optinput3(2,:)'],ratio),...
+      {'t','u','lambda','p','e','uopt'},0,0);
+
+end
+
 %% problem 4
 
 ratio = 5;
