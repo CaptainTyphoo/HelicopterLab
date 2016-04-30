@@ -81,9 +81,17 @@ As in \cref{sec:prob2} a constraint of $\pm\SI{30}{\degree}$ is used for the pit
 with $\vec{x}_f=\begin{bmatrix} 0 & 0 & 0 & 0 & 0 & 0\end{bmatrix}^T$ being the final state at $t=N$. A nonlinear constraint 
 \begin{equation}
 c\mybr{\vec{x}_k}=\alpha \exp\mybr{-\beta\mybr{\lambda_k-\lambda_t}^2}-e_k\leq0 \quad \forall k\in\{1,\ldots,N\}
+\label{eq:problem4_nonlinear_constraint}
 \end{equation}
-with $\alpha=0.2$, $\beta=20$ and $\lambda_t=\frac{2\pi}{3}$, is added. 
+with $\alpha=0.2$, $\beta=20$ and $\lambda_t=\frac{2\pi}{3}$, is added. Since \eqref{eq:problem4_nonlinear_constraint} is nonlinear the optimization problem is nonlinear and therefore a nonlinear solver is used. The MATLAB command \verb|fmincon| with three different algorithms is used. The SQP algorithm converges to a solution where the tarjectory of the travel $\lambda$ consists of a single step from $\pi$ to 0, which is unphysical and therefore cannot be used as a reference trajoctory for the helicopter. The active-set method converges to a solution where the input $u_1$ is \SI{83}{\percent} of the time at saturation limit. Although this is only the open loop trajectory it means that when the loop is closed using the LQR the input is still at the saturation limit (assuming that the model is perfect and that there are no disturbances) which means that the control loop is actually open. Because of that the interior-point method is used which results in an trajectory where the input is only \SI{8}{\percent} of the time at the saturation limit. The computation time for calculating the trajectory are \SI{0.33}{\second} for the SQP method, \SI{8.06}{\second} for the active-set method and \SI{53.51}{\second} for the interior-point method, but this is of little concern since the optimization problem doesn't need to be solved online.
 
+The time curve of the helicopter without feedback can be seen in \cref{fig:problem4plots_without_feedback}. As in \cref{sec:prob2} the trajectory of the pitch $p$ is followed, which is due to the pitch control loop which helps to counteract for modeling errors and that a linear model of the nonlinear system is used. The same applies for the elevation control loop which had a reference point of zero in the last two sections and has a trajectory unequal to zero due to the nonlinear constraint \eqref{eq:problem4_nonlinear_constraint} in this section. The reference trajectory of the travel $\lambda$ is not followed satisfactorily. This is the case because the travel $\lambda$ is constrolled in open loop and due to modeling errors the input is not calculated correctly which causes the severe deviations.
+\begin{figure}[htbp]
+	\centering
+	\ProblemFourPlot{../MATLAB/Export/problem4plot_without_feedback.csv}{../MATLAB/Export/problem4plots_opt.csv}
+	\caption{problem4plots\_without\_feedback}
+	\label{fig:problem4plots_without_feedback}%
+\end{figure}
 
 \begin{figure}[htbp]
 	\centering
@@ -92,12 +100,6 @@ with $\alpha=0.2$, $\beta=20$ and $\lambda_t=\frac{2\pi}{3}$, is added.
 	\label{fig:problem4plot_511111_11}%
 \end{figure}
 
-\begin{figure}[htbp]
-	\centering
-	\ProblemFourPlot{../MATLAB/Export/problem4plot_without_feedback.csv}{../MATLAB/Export/problem4plots_opt.csv}
-	\caption{problem4plots\_without\_feedback}
-	\label{fig:problem4plots_without_feedback}%
-\end{figure}
 
 \begin{figure}[htbp]
 	\centering
