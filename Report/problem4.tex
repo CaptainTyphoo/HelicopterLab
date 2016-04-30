@@ -1,9 +1,84 @@
 \section{Optimal Control of Pitch/Travel and Elevation with and without Feedback}\label{sec:prob4}
-If you claim something you read in the textbook \citep{Nocedal2006}, you should cite it. Also, remember to reference all figures in the text. Figures have a number and should be referenced by that number (again, always use dynamic references). They also tend to float around, meaning they generally don't appear where you ask them to in the text. This is fine, do not try to force a figure (or a table) to appear in a particular place. As long a you refer to it, it's easy to find. No figure should be included without being referenced in the text. 
+In this part of the excersice a constraint on the elevation is added. Therefore the equation describing the dynamics of the elevation $e$ from \eqref{} must be added to the state space representation of the model of the helicopter
+\begin{subequations}
+	\begin{equation}
+	\frac{\d\vec{x}}{\d t}=\vec{A}_c\vec{x}+\vec{B}_c\vec{u}
+	\end{equation}
+	with
+	\begin{align}
+	\vec{A}&=\begin{bmatrix}
+    0 & 1 & 0 & 0 & 0 & 0\\ 
+	0 & 0 & -K_2 & 0 & 0 & 0\\ 
+	0 & 0 & 0 & 1 & 0 & 0\\ 
+	0 & 0 & -K_1 K_{pp} & -K_1*K_{pd} & 0 & 0 \\
+	0 & 0 & 0 & 0 & 0 & 1\\
+	0 & 0 & 0 & 0 & -K_3*K_{ep} & -K_3*K_{ed}
+	\end{bmatrix}\\
+	\vec{B}&=\begin{bmatrix}
+	0 & 0\\ 
+	0 & 0\\ 
+	0 & 0\\ 
+	K_1 K_{pp} & 0\\ 
+	0 & 0\\ 
+	0 & K_3 K_{ep}
+	\end{bmatrix}\\
+	\vec{x}&=\begin{bmatrix}
+	\lambda &
+	r&
+	p&
+	\dot{p}&
+	e&
+	\dot{e}
+	\end{bmatrix}^T\\
+	\vec{u}&=\begin{bmatrix}
+	p_c & e_c
+	\end{bmatrix}^T
+	\FullStop
+	\end{align}
+\end{subequations}
+The continuous model is then converted to a time discrete model 
+\begin{equation}
+\vec{x}_{t+1}=\vec{A}\vec{x}_t+\vec{B}\vec{u}
+\end{equation}with the forward Euler method
+\begin{subequations}
+	\begin{align}
+	\vec{A}&=\vec{I}_{6\times6}+\vec{A}_c \Delta t\\
+	\vec{B}&=\vec{B}_c\Delta t
+	\end{align}
+\end{subequations}
+with $\Delta t$ being the sampling time. 
 
-If you look at the source code for including figures, you can see that I've used the optional option \verb+[htb]+. This tells Latex where you wish the figure to appear, in prioritized order. h means ``Here'', t means ``Top of this page'', b means ``Bottom of this page'', and p (not used here) means ``on a Page with only floats (such as figures and tables)''. Note that your wish might not be granted, and this is because Latex actually optimizes the placement of figures. If you start forcing figures to be in specific places, it often leads to really strange layout somewhere else in the document. 
 
-Generally, let Latex handle the documentation layout.
+
+\begin{figure}[htbp]
+	\centering
+	\ProblemFourPlot{../MATLAB/Export/problem4plot_511111_11.csv}{../MATLAB/Export/problem4plots_opt.csv}
+	\caption{problem4plot\_511111\_11}
+	\label{fig:problem4plot_511111_11}%
+\end{figure}
+
+\begin{figure}[htbp]
+	\centering
+	\ProblemFourPlot{../MATLAB/Export/problem4plot_without_feedback.csv}{../MATLAB/Export/problem4plots_opt.csv}
+	\caption{problem4plots\_without\_feedback}
+	\label{fig:problem4plots_without_feedback}%
+\end{figure}
+
+\begin{figure}[htbp]
+	\centering
+	\ProblemFourPlot{../MATLAB/Export/problem4_LQR_bothconstraintsN=60.csv}{../MATLAB/Export/problem4plots_LQR_bothconstraintsN=60_opt.csv}
+	\caption{LQR\_bothconstraintsN=60}
+	\label{fig:LQR_bothconstraintsN=60}%
+\end{figure}
+
+\begin{figure}[htbp]
+	\centering
+	\ProblemFourPlot{../MATLAB/Export/problem4_LQR_onlylambdadotN=60_time_to_complete=553.53s.csv}{../MATLAB/Export/problem4plots_LQR_onlylambdadotN=60_time_to_complete=553.53s_opt.csv}
+	\caption{LQR\_onlylambdadotN=60\_time\_to\_complete=553.53s}
+	\label{fig:LQR_onlylambdadotN=60_time_to_complete=553.53s}%
+\end{figure}
+
+\cleardoublepage
 
 
 \begin{figure}[htbp]
