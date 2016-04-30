@@ -36,7 +36,7 @@ In this part of the excersice a constraint on the elevation is added. Therefore 
 	\FullStop
 	\end{align}
 \end{subequations}
-The continuous model is then converted to a time discrete model 
+The new input $e_c$ is the stepoint of the elevation. The continuous model is then converted to a time discrete model 
 \begin{equation}
 \vec{x}_{t+1}=\vec{A}\vec{x}_t+\vec{B}\vec{u}
 \end{equation}with the forward Euler method
@@ -45,9 +45,44 @@ The continuous model is then converted to a time discrete model
 	\vec{A}&=\vec{I}_{6\times6}+\vec{A}_c \Delta t\\
 	\vec{B}&=\vec{B}_c\Delta t
 	\end{align}
+	\label{eq:problem4_disc_model}%
 \end{subequations}
 with $\Delta t$ being the sampling time. 
 
+The cost function 
+\begin{equation}
+\phi=\sum_{i=1}^{N}\mybr{\lambda_i-\lambda_f}^2+q_1p_{ci}^2+q_2e_{ci}^2
+\end{equation}
+is used as a minimization criteria, with the final value for the travel $\lambda_f=0$ and $q_1=1$ and $q_2=2$. The values for $q_1$ and $q_2$ are chosen this way to reduce the oscillations in the opimal trajectory of $p$ and $\dot{p}$ which occur if $q_1=q_2=1$ is used.
+
+The initial value $\vec{x}_0=\begin{bmatrix}\pi & 0 & 0 & 0 & 0 & 0\end{bmatrix}^T$ is used to ensure a travel distance of $\pi$.
+
+
+As in \cref{sec:prob2} a constraint of $\pm\SI{30}{\degree}$ is used for the pitch $p$ and the setpoint of the pitch $p_c$. Input constraints of $\pm\SI{60}{\degree}$ for $e_c$ are added to avoid a collision between the helicopter and the table on which the helicopter is mounted. Since \eqref{eq:problem4_disc_model} needs to be valid at each time step the equaions are added as equality constraints
+\begin{subequations}
+	\begin{align}
+	\vec{A}_{eq}&=\begin{bmatrix}
+	\vec{I} & \vec{0} & \cdots & \cdots & \vec{0} & -\vec{B} & \vec{0} & \cdots &\cdots & \vec{0}\\
+	-\vec{A} & \vec{I} & \ddots & & \vdots & \vec{0} & \ddots & \ddots &  & \vdots\\
+	\vec{0} & \ddots & \ddots & \ddots & \vdots & \vdots & \ddots & \ddots & \ddots &\vdots \\
+	\vdots & \ddots & \ddots & \ddots & \vec{0} & \vdots &  & \ddots & \ddots &\vec{0} \\
+	\vec{0} & \cdots & \vec{0} & -\vec{A} & \vec{I} & \vec{0} & \cdots & \cdots & \vec{0} &-\vec{B}\\
+	\vec{0} & \cdots & \cdots & \cdots & \vec{I} & \vec{0} & \cdots & \cdots & \cdots & \vec{0}\\
+	\end{bmatrix}\\
+	\vec{B}_{eq}&=\begin{bmatrix}
+	\vec{A}\vec{x}_0\\
+	\vec{0}\\
+	\vdots\\
+	\vec{0}\\
+	\vec{x}_f
+	\end{bmatrix}\Comma
+	\end{align}
+\end{subequations}
+with $\vec{x}_f=\begin{bmatrix} 0 & 0 & 0 & 0 & 0 & 0\end{bmatrix}^T$ being the final state at $t=N$. A nonlinear constraint 
+\begin{equation}
+c\mybr{\vec{x}_k}=\alpha \exp\mybr{-\beta\mybr{\lambda_k-\lambda_t}^2}-e_k\leq0 \quad \forall k\in\{1,\ldots,N\}
+\end{equation}
+with $\alpha=0.2$, $\beta=20$ and $\lambda_t=\frac{2\pi}{3}$, is added. 
 
 
 \begin{figure}[htbp]
