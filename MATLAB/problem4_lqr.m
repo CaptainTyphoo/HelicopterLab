@@ -1,4 +1,5 @@
-%% Optimal control of Pitch/Travel with Feedback(LQ)
+% Optimal control of Pitch/Travel and Elevation 
+% with Feedback(LQ)
 
 problem4;
 
