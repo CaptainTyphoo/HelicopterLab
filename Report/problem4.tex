@@ -93,12 +93,39 @@ The time curve of the helicopter without feedback can be seen in \cref{fig:probl
 	\label{fig:problem4plots_without_feedback}%
 \end{figure}
 
+As in \cref{sec:prob3} an LQR is used as feedback controller. The input is then calculated by
+\begin{equation}
+\vec{u}_t=\vec{u}_t^*-\vec{K}\mybr{\vec{x}_t-\vec{x}_t^*}
+\end{equation}
+with $\vec{u}_t^*$ being the optimal input sequence and $\vec{x}_t^*$ being the optimal trajectory of the states. This new input sequence $\vec{u}$ is then used instead of the optimal input trajectory $\vec{u}_*$ to ensure that the deviations of the desired travel trajectory $\lambda$ is reduced. The weighting matrices 
+\begin{subequations}
+	\begin{align}
+	\vec{Q}&=\mathrm{diag}\mybr{5,1,1,1,1,1}\\
+	\vec{R}&=\mathrm{diag}\mybr{1,1}
+	\end{align}
+\end{subequations}
+are used, which results in a feedback matrix
+\begin{equation}
+\vec{K}=\begin{bmatrix}
+-0.1899  & -0.6725  & -0.7316  &  0.0272  & -0.0000  & -0.0000\\
+0.0000   & 0.0000   & -0.0000  & -0.0000  & 0.0892   & 0.4678
+\end{bmatrix}\FullStop
+\end{equation}
+The values for $Q$ and $R$ are chosen 
+
+The time curve of the helicopter with an LQR as feedback controller is shown in \cref{fig:problem4plot_511111_11}. The deviations from the trajectory of the travel $\lambda$ are much smaller than compared to the ones in \cref{fig:problem4plots_without_feedback}. Apart from that there are less oscillations in the time curve of the elevation $e$. The constraint on the elevation is not satsfied perfectly due to the coupling of the pitch $p$ and travel $\lambda$ with the elevation $e$ which is not considered in the simplified model which is used in this laboratory. The deviations from time curve of the pitch $p$ are larger but they are negligible since the goal is to control the travel $\lambda$ and to satisfy the constraints. Due to the feedback the noise of the measurement can be seen in in the input trajectory. The impulses that can be observed in the input $u_2$ occur because the rates $r$, $\dot{p}$ and $\dot{e}$ are estimated using filters of the type 
+\begin{equation}
+G\mybr{s}=\frac{Ts}{s+T}
+\end{equation}
+which have a differentiating behaviour for frequencies lower than $\omega=\frac{1}{T}$. Since the measurements of $\lambda$, $p$ and $e$ have discrete values a step occurs whenever the value changes which results in an impulse in the velocity estimation.
+
 \begin{figure}[htbp]
 	\centering
 	\ProblemFourPlot{../MATLAB/Export/problem4plot_511111_11.csv}{../MATLAB/Export/problem4plots_opt.csv}
 	\caption{problem4plot\_511111\_11}
 	\label{fig:problem4plot_511111_11}%
 \end{figure}
+
 
 
 \begin{figure}[htbp]
