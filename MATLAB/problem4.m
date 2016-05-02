@@ -66,10 +66,10 @@ xl      = -Inf*ones(mx,1);              % Lower bound on states (no bound)
 xu      = Inf*ones(mx,1);               % Upper bound on states (no bound)
 xl(3)   = ul(1);                           % Lower bound on state x3
 xu(3)   = uu(1);                           % Upper bound on state x3
-xl(2)   = -0.15;
-xu(2)   = 0.15;
-xl(6)   = -0.12;
-xu(6)   = 0.12;
+%xl(2)   = -0.15;
+%xu(2)   = 0.15;
+%xl(6)   = -0.12;
+%xu(6)   = 0.12;
 
 % Generate constraints on measurements and inputs
 
@@ -82,57 +82,25 @@ vub(N*mx+M*mu)  = 0;                    % We want the last input to be zero
 % Generate the matrix Q and the vector c (objecitve function weights in the QP problem) 
 
 Q1 = zeros(mx,mx);
-Q1(1,1) = 1;                             % Weight on state x1
+Q1(1,1) = 1;                            % Weight on state x1
 %Q1(2,2) = ;                            % Weight on state x2
-Q1(3,3) = 0;                             % Weight on state x3
+Q1(3,3) = 0;                            % Weight on state x3
 %Q1(4,4) = ;                            % Weight on state x4
-P1 = diag([1,2]);                                 % Weight on input
-Q = genq2(Q1,P1,N,M,mu);              % Generate Q
+P1 = diag([1,2]);                       % Weight on input
+Q = genq2(Q1,P1,N,M,mu);                % Generate Q
 c = zeros(N*mx+M*mu,1);                 % Generate c
 
 % Generate system matrixes for linear model
-%I_N = eye(N);
-%Aeq_c1 = eye(N*mx);                       % Component 1 of Aeq
-%Aeq_c2 = kron(diag(ones(N-1,1),-1), -A1);   % Component 2 of Aeq
-%Aeq_c3 = kron(I_N, -B1);                    % Component 3 of Aeq
-%Aeq = [Aeq_c1 + Aeq_c2, Aeq_c3; [zeros(mx,(N-1)*mx), eye(4), zeros(mx,N*mu)]];           % Generate A
 Aeq = gena2(A1,B1,N,mx,mu);
 Aeq = [ Aeq; [zeros(mx,(N-1)*mx), eye(6), zeros(mx,N*mu)]];
 
 beq = [A1*x0; zeros((N-1)*mx,1); xf];      % Generate b
 
-ud1 = 5.2;
-ud2 = 5.05;
-Au = zeros(N*mu*2-4,N*mu);
-j = [1 0 -1; -1 0 1];
-
-for i = 1:2*N-2
-    Au(i*2-1:i*2,i:i+2)=j;
-end
-
-Au = [1 zeros(1,size(Au,2)-1);
-    -1 zeros(1,size(Au,2)-1);
-    0 1 zeros(1,size(Au,2)-2);
-    0 -1 zeros(1,size(Au,2)-2);
-    Au;
-    zeros(1,size(Au,2)-2) 1 0;
-    zeros(1,size(Au,2)-2) -1 0;
-    zeros(1,size(Au,2)-1) 1;
-    zeros(1,size(Au,2)-1) -1;];
-
-A = [zeros(N*mu*2+4,N*mx), Au];
-b = kron(ones(N-1,1),[ud1;ud1;ud2;ud2]);
-
-b = [ud1; ud1; ud2; ud2; b; ud1; ud1; ud2; ud2];
-
-% Solve Qp problem with linear model
-%options = optimset('Display','notify', 'Diagnostics','off', 'LargeScale','off', 'Algorithm','active-set');
+% Solve nonlinear problem with linear model
 phi = @ (x) (x'*Q*x);
-options = optimset('Display','notify', 'Diagnostics','on','MaxFunEvals',Inf,'MaxIter',Inf, 'TolCon', 480);%,'TolX', Inf);
+options = optimset('Display','notify', 'Diagnostics','on','MaxFunEvals',Inf,'MaxIter',Inf);
 tic
-%[z, lambda] = fmincon(phi, z0,A,b,Aeq,beq,vlb,vub,@constr4,options);
 [z, lambda] = fmincon(phi, z0,[],[],Aeq,beq,vlb,vub,@constr4,options);
-%[z,lambda] = quadprog(Q,[],[],[],Aeq,beq,vlb,vub);
 t1=toc
 
 
@@ -146,8 +114,6 @@ for i=1:N*mx+M*mu
 end
 
 % Extract control inputs and states
-
-%u  = [z(N*mx+1:N*mx+M*mu);z(N*mx+M*mu)]; % Control input from solution
 
 u1 = [z(N*mx+1:mu:N*mx+M*mu);z(N*mx+M*mu-1)];              % State x1 from solution
 u2 = [z(N*mx+2:mu:N*mx+M*mu);z(N*mx+M*mu)];              % State x2 from solution
