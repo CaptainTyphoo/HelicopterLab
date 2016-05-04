@@ -122,7 +122,7 @@ The constraint on the elevation is not satsfied perfectly due to the coupling of
 
 The deviations from time curve of the pitch $p$ are larger but they are negligible since the goal is to control the travel $\lambda$ and to satisfy the constraints. Due to the feedback the noise of the measurement can be seen in in the input trajectory. The impulses that can be observed in the input $u_2$ occur because the rates $r$, $\dot{p}$ and $\dot{e}$ are estimated using filters of the type 
 \begin{equation}
-G\mybr{s}=\frac{Ts}{s+T}
+G\mybr{s}=\frac{sT}{s+T}
 \end{equation}
 which have a differentiating behaviour for frequencies lower than $\omega=\frac{1}{T}$. Since the measurements of $\lambda$, $p$ and $e$ have discrete values a step occurs whenever the value changes which results in an impulse in the velocity estimation.
 
@@ -141,7 +141,7 @@ To improve the optimal trajectory constraints on $r$ and $\dot{e}$ are introduce
 	\end{align}
 	\label{eq:problem4_additional_constraints}%
 \end{subequations}
-The time curve with additional constraints on $r$ and $\dot{e}$ is shown in \cref{fig:LQR_bothconstraint_N=100_LQR}. The number of steps N is increased to 100 to get a feasible solution.  The reason behind this is that there needs to be a certain speed $r$ if the objective is to move from $\pi$ to 0 within N steps. The increased number of steps cause the computation time to rise to \SI{2100}{\second} compared to \SI{50}{\second} which are needed for computation of the trajectory in \cref{fig:problem4plots_without_feedback} and \cref{fig:problem4plot_511111_11}. The deviations of the optimal travel $\lambda$ trajectory are smaller than in \cref{fig:problem4plot_511111_11}, although some oscillation occur which are caused by a too large gain in the $\vec{K}$ matrix, so a smaller weight on 
+The time curve with additional constraints on $r$ and $\dot{e}$ is shown in \cref{fig:LQR_bothconstraint_N=100_LQR}. The number of steps N is increased to 100 to get a feasible solution.  The reason behind this is, that it takes a certain amount of time respectively time steps N to to move from $\pi$ to 0 with a certain maximum value  of the travel rate $r$. The increased number of steps cause the computation time to rise to \SI{2100}{\second} compared to \SI{50}{\second} which are needed for computation of the trajectory in \cref{fig:problem4plots_without_feedback} and \cref{fig:problem4plot_511111_11}. The deviations of the optimal travel $\lambda^*$ trajectory are smaller than in \cref{fig:problem4plot_511111_11}, although some oscillation occur which are caused by a too large gain in the $\vec{K}$ matrix, a smaller weight on the deviations of the travel $\lambda$ would reduce these. The oscillations can also be observed in the input $u_1$ and the pitch $p$. 
 
 
 
