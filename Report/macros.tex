@@ -109,8 +109,6 @@
 	ylabel={$u$} in \si{1},legend to name=input]
 	\addplot[color=blue] table[x=t,y=u] {#1};
 	\addlegendentry{measured}
-	\addplot[color=green, const plot] table[x=t,y=uopt] {#1};
-	\addlegendentry{optimal measured?}
 	\addplot[color=red, const plot] table[x=t,y=u] {#2};
 	\addlegendentry{optimal}
 	
@@ -172,8 +170,6 @@
 	ylabel={$u_1$} in \si{1},legend to name=input1]
 	\addplot[color=blue] table[x=t,y=u1] {#1};
 	\addlegendentry{measured}
-	\addplot[color=green, const plot] table[x=t,y=u1opt] {#1};
-	\addlegendentry{optimal measured?}
 	\addplot[color=red, const plot] table[x=t,y=u1] {#2};
 	\addlegendentry{optimal}
 	
@@ -181,8 +177,6 @@
 	ylabel={$u_2$} in \si{1},legend to name=input2]
 	\addplot[color=blue] table[x=t,y=u2] {#1};
 	\addlegendentry{measured}
-	\addplot[color=green, const plot] table[x=t,y=u2opt] {#1};
-	\addlegendentry{optimal measured?}
 	\addplot[color=red, const plot] table[x=t,y=u2] {#2};
 	\addlegendentry{optimal}
 	
@@ -194,7 +188,7 @@
 	{\pgfplotslegendfromname{pitch}};
 	\node at (ioverlauf c1r3.east) [anchor=east, xshift=-0.3cm, yshift=-1.0cm]
 	{\pgfplotslegendfromname{elevation}};
-	\node at (ioverlauf c1r4.east) [anchor=east, xshift=-0.3cm, yshift=1.3cm]
+	\node at (ioverlauf c1r4.east) [anchor=east, xshift=-0.3cm, yshift=1.1cm]
 	{\pgfplotslegendfromname{input1}};
 	\node at (ioverlauf c1r5.east) [anchor=east, xshift=-0.3cm, yshift=0.8cm]
 	{\pgfplotslegendfromname{input2}};

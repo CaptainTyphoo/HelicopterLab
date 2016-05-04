@@ -141,13 +141,14 @@ To improve the optimal trajectory constraints on $r$ and $\dot{e}$ are introduce
 	\end{align}
 	\label{eq:problem4_additional_constraints}%
 \end{subequations}
-The time curve with additional constraints on $r$ and $\dot{e}$ is shown in \cref{fig:LQR_bothconstraintsN=60}. The optimal trajectory has a large step in the beginning since \verb|fmincon| converges to an infeasible solution. A possibile solution to receive a feasible solution would be to increase the number of steps N, since there needs to be a certain speed if the objective is to move from $\pi$ to 0 within N steps, but this would also increase the computation time significantly. Another possibility would be to drop the constraint on the travel rate $r$. 
+The time curve with additional constraints on $r$ and $\dot{e}$ is shown in \cref{fig:LQR_bothconstraint_N=100_LQR}. The number of steps N is increased to 100 to get a feasible solution.  The reason behind this is that there needs to be a certain speed $r$ if the objective is to move from $\pi$ to 0 within N steps. The increased number of steps cause the computation time to rise to \SI{2100}{\second} compared to \SI{50}{\second} which are needed for computation of the trajectory in \cref{fig:problem4plots_without_feedback} and \cref{fig:problem4plot_511111_11}. The deviations of the optimal travel $\lambda$ trajectory are smaller than in \cref{fig:problem4plot_511111_11}, although some oscillation occur which are caused by a too large gain in the $\vec{K}$ matrix, so a smaller weight on 
+
+
 
 \begin{figure}[htbp]
 	\centering
-	\ProblemFourPlot{../MATLAB/Export/problem4_LQR_bothconstraintsN=60.csv}{../MATLAB/Export/problem4plots_LQR_bothconstraintsN=60_opt.csv}
+	\ProblemFourPlot{../MATLAB/Export/problem4_LQR_bothconstraint_N=100_LQR[5,1,1,1,1,1].csv}{../MATLAB/Export/problem4plots_LQR_bothconstraint_N=100_LQR[5,1,1,1,1,1]_opt.csv}
 	\caption{Time curve of inputs and states while using the optimal trajectory with additional constraints \eqref{eq:problem4_additional_constraints}.}
-	\label{fig:LQR_bothconstraintsN=60}%
+	\label{fig:LQR_bothconstraint_N=100_LQR}%
 \end{figure}
-
 
