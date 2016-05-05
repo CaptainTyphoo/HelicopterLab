@@ -1,84 +1,74 @@
 \section{Optimal Control of Pitch/Travel with Feedback (LQ)}\label{sec:prob3}
-You are as mentioned welcome to use the figures from the assignment text if you want to (cite the source!). You can also draw your own (cite the source if it is heavily based on someone else's.). Figure~\ref{fig:layers_openloop} was created quickly with Ipe. Inkscape is a good alternative for more advanced illustrations. Some people prefer the Latex package TikZ (\url{http://texample.net/tikz/examples/}), but this takes a little effort to learn.
 
-\begin{figure}[tp]
-	\centering
-		\includegraphics[width=1.00\textwidth]{figures/layers_openloop.pdf}
-	\caption{A figure created with Ipe.}
-	\label{fig:layers_openloop}
-\end{figure}
-
-Here is a matrix equation you can use as a template:
+\subsection{Introducing feedback}\label{sec:prob31}
+In Problem 3 the open control loop from Problem 2 had to be closed by adding a feedback loop to the optimal controller. In order to do so the input had to manipulated in the following way:
 \begin{equation}
-\begin{bmatrix}
- 1 &  0 &  0 & 0 & -b &  0 &  0 &  0 \\
--a &  1 &  0 & 0 &  0 & -b &  0 &  0 \\
- 0 & -a &  1 & 0 &  0 &  0 & -b &  0 \\
- 0 &  0 & -a & 1 &  0 &  0 &  0 & -b                                
-\end{bmatrix}
-\begin{bmatrix} x_1 \\ x_2 \\ x_3 \\ x_4 \\ u_0 \\ u_1 \\ u_2 \\ u_3 \end{bmatrix}
-=
-\begin{bmatrix}
-ax_0 \\ 0 \\ 0 \\ 0      
-\end{bmatrix}
+	u_k=u_k^*-K^\top(x_k-x_k^*)
 \end{equation}
+As long as the helicopter is following the optimal trajectory $x_k^*$ only the optimal input will be applied. If the helicopter deviates from the optimal trajectory countermeasures depending on the matrix $K$ will be taken. The matrix $K$ was calculated by a LQ controller which minimises the quadratic objective funktion $J$ for the linear model:
+\begin{equation}
+	J=\displaystyle\sum_{i=0}^{\infty} \Delta x_{i+1}^\top Q \Delta x_{i+1} + \Delta u_i^\top R \Delta u_i, \quad Q \geq 0, R >0
+\end{equation}
+The weighting matrices $Q$ and $R$ will influence the behaviour of the feedback control. Higher values in the $Q$-matrix will punish deviations from the optimal trajectory harder while higher values in the $R$-matrix will punish the usage of the manipulated variable. The optimal $K$-matrix was found by using the \texttt{dqlr}-function from $\mathrm{MATLAB}$. 
+\subsection{Results}\label{sec:prob32}
+Different values for $Q$ and $R$ were implemented. The results are shown in the Figures (\ref{fig:problem3plot_1010_1}) to (\ref{fig:problem3_LQR[10,1,5,0]}) \\
+The best fit to the optimal trajectory could be attained by the weighting displayed in Figure \ref{fig:problem3_LQR[10,1,5,0]}. Due to the closed feedback loop most variations of $Q$ and $R$ remain at the terminal point. Though in some cases there is still some movement of the helicopter visible (compare Figure \ref{fig:problem3plot_1050_1} and \ref{fig:problem3_LQR[1,0,10,10]}) or the helicopter does not reach the terminal point at all (compare Figure \ref{fig:problem3_LQR[1,0,10,10]} and \ref{fig:problem3_LQR[5,0,0,5]}). For most tested variations there appear oscillations in the pitch. Exceptional cases can be seen in Figure \ref{problem3_LQR[1,0,10,0]}, \ref{Results for $Q=[1,0,10,10]$ and $R=0.5$} and \ref{fig:problem3_LQR[5,0,0,5]}. Although the movement in pitch seems to be more controlled in these cases, they are amongst the worst options considering the deviation of the measured traveling from the optimal trajectory.
 
-
-
+\subsection{Comparison to Model Predictive Control}\label{sec:prob33}
 
 \begin{figure}[htbp]
 	\centering
 	\ProblemThreePlot{../MATLAB/Export/problem3plot_1010_1.csv}{../MATLAB/Export/problem2plots_q_10_opt.csv}
-	\caption{problem3plot\_1010\_1}
-	\label{fig:problem3plot_1010_1}%
+	\caption{Results for $Q=[1,0,1,0]$ and $R=1$}
+	\label{fig:problem3plot_1010_1}
 \end{figure}
 
 \begin{figure}[htbp]
 	\centering
 	\ProblemThreePlot{../MATLAB/Export/problem3plot_1050_1.csv}{../MATLAB/Export/problem2plots_q_10_opt.csv}
-	\caption{problem3plot\_1050\_1}
-	\label{fig:problem3plot_1050_1}%
+	\caption{Results for $Q=[1,0,5,0]$ and $R=1$}
+	\label{fig:problem3plot_1050_1}
 \end{figure}
 
 \begin{figure}[htbp]
 	\centering
 	\ProblemThreePlot{../MATLAB/Export/problem3plot_5010_1.csv}{../MATLAB/Export/problem2plots_q_10_opt.csv}
-	\caption{problem3plot\_5010\_1}
-	\label{fig:problem3plot_5010_1}%
+	\caption{Results for $Q=[5,0,1,0]$ and $R=1$}
+	\label{fig:problem3plot_5010_1}
 \end{figure}
 
 \begin{figure}[htbp]
 	\centering
 	\ProblemThreePlot{../MATLAB/Export/problem3plot_10150_0.5.csv}{../MATLAB/Export/problem2plots_q_10_opt.csv}
-	\caption{problem3plot\_10150\_0.5}
-	\label{fig:problem3plot_10150_0.5}%
+	\caption{Results for $Q=[1,0,15,0]$ and $R=0.5$}
+	\label{fig:problem3plot_10150_0.5}
 \end{figure}
 
 
 \begin{figure}[htbp]
 	\centering
 	\ProblemThreePlot{../MATLAB/Export/problem3_LQR[1,0,10,0].csv}{../MATLAB/Export/problem2plots_q_10_opt.csv}
-	\caption{problem3\_LQR[1,0,10,0], R = 0.5}
-	\label{fig:problem3_LQR[1,0,10,0]}%
+	\caption{Results for $Q=[1,0,10,0]$ and $R=0.5$}
+	\label{fig:problem3_LQR[1,0,10,0]}
 \end{figure}
 
 \begin{figure}[htbp]
 	\centering
 	\ProblemThreePlot{../MATLAB/Export/problem3_LQR[1,0,10,10].csv}{../MATLAB/Export/problem2plots_q_10_opt.csv}
-	\caption{problem3\_LQR[1,0,10,10], R = 0.5}
-	\label{fig:problem3_LQR[1,0,10,10]}%
+	\caption{Results for $Q=[1,0,10,10]$ and $R=0.5$}
+	\label{fig:problem3_LQR[1,0,10,10]}
 \end{figure}
 
 \begin{figure}[htbp]
 	\centering
 	\ProblemThreePlot{../MATLAB/Export/problem3_LQR[5,0,0,5].csv}{../MATLAB/Export/problem2plots_q_10_opt.csv}
-	\caption{problem3\_LQR[5,0,0,5], R = 0.5}
-	\label{fig:problem3_LQR[5,0,0,5]}%
+	\caption{Results for $Q=[5,0,0,5]$ and $R=0.5$}
+	\label{fig:problem3_LQR[5,0,0,5]}
 \end{figure}
 
 \begin{figure}[htbp]
 	\centering
 	\ProblemThreePlot{../MATLAB/Export/problem3_LQR[10,1,5,0].csv}{../MATLAB/Export/problem2plots_q_10_opt.csv}
-	\caption{problem3\_LQR[10,1,5,0], R = 0.5}
-	\label{fig:problem3_LQR[10,1,5,0]}%
+	\caption{Results for $Q=[10,1,5,0]$ and $R=0.5$}
+	\label{fig:problem3_LQR[10,1,5,0]}
 \end{figure}
