@@ -1,98 +1,154 @@
 \section{Optimal Control of Pitch/Travel and Elevation with and without Feedback}\label{sec:prob4}
-If you claim something you read in the textbook \citep{Nocedal2006}, you should cite it. Also, remember to reference all figures in the text. Figures have a number and should be referenced by that number (again, always use dynamic references). They also tend to float around, meaning they generally don't appear where you ask them to in the text. This is fine, do not try to force a figure (or a table) to appear in a particular place. As long a you refer to it, it's easy to find. No figure should be included without being referenced in the text. 
+In this part of the excersice a constraint on the elevation is added. Therefore the equation describing the dynamics of the elevation $e$ from \eqref{} must be added to the state space representation of the model of the helicopter
+\begin{subequations}
+	\begin{equation}
+	\frac{\d\vec{x}}{\d t}=\vec{A}_c\vec{x}+\vec{B}_c\vec{u}
+	\end{equation}
+	with
+	\begin{align}
+	\vec{A}&=\begin{bmatrix}
+    0 & 1 & 0 & 0 & 0 & 0\\ 
+	0 & 0 & -K_2 & 0 & 0 & 0\\ 
+	0 & 0 & 0 & 1 & 0 & 0\\ 
+	0 & 0 & -K_1 K_{pp} & -K_1*K_{pd} & 0 & 0 \\
+	0 & 0 & 0 & 0 & 0 & 1\\
+	0 & 0 & 0 & 0 & -K_3*K_{ep} & -K_3*K_{ed}
+	\end{bmatrix}\\
+	\vec{B}&=\begin{bmatrix}
+	0 & 0\\ 
+	0 & 0\\ 
+	0 & 0\\ 
+	K_1 K_{pp} & 0\\ 
+	0 & 0\\ 
+	0 & K_3 K_{ep}
+	\end{bmatrix}\\
+	\vec{x}&=\begin{bmatrix}
+	\lambda &
+	r&
+	p&
+	\dot{p}&
+	e&
+	\dot{e}
+	\end{bmatrix}^T\\
+	\vec{u}&=\begin{bmatrix}
+	p_c & e_c
+	\end{bmatrix}^T
+	\FullStop
+	\end{align}
+\end{subequations}
+The new input $e_c$ is the stepoint of the elevation. The continuous model is then converted to a time discrete model 
+\begin{equation}
+\vec{x}_{t+1}=\vec{A}\vec{x}_t+\vec{B}\vec{u}
+\end{equation}with the forward Euler method
+\begin{subequations}
+	\begin{align}
+	\vec{A}&=\vec{I}_{6\times6}+\vec{A}_c \Delta t\\
+	\vec{B}&=\vec{B}_c\Delta t
+	\end{align}
+	\label{eq:problem4_disc_model}%
+\end{subequations}
+with $\Delta t$ being the sampling time. 
 
-If you look at the source code for including figures, you can see that I've used the optional option \verb+[htb]+. This tells Latex where you wish the figure to appear, in prioritized order. h means ``Here'', t means ``Top of this page'', b means ``Bottom of this page'', and p (not used here) means ``on a Page with only floats (such as figures and tables)''. Note that your wish might not be granted, and this is because Latex actually optimizes the placement of figures. If you start forcing figures to be in specific places, it often leads to really strange layout somewhere else in the document. 
+The cost function 
+\begin{equation}
+\phi=\sum_{i=1}^{N}\mybr{\lambda_i-\lambda_f}^2+q_1p_{ci}^2+q_2e_{ci}^2
+\end{equation}
+is used as a minimization criteria, with the final value for the travel $\lambda_f=0$ and $q_1=1$ and $q_2=2$. The values for $q_1$ and $q_2$ are chosen this way to reduce the oscillations in the opimal trajectory of $p$ and $\dot{p}$ which occur if $q_1=q_2=1$ is used.
 
-Generally, let Latex handle the documentation layout.
+The initial value $\vec{x}_0=\begin{bmatrix}\pi & 0 & 0 & 0 & 0 & 0\end{bmatrix}^T$ is used to ensure a travel distance of $\pi$.
 
 
+As in \cref{sec:prob2} a constraint of $\pm\SI{30}{\degree}$ is used for the pitch $p$ and the setpoint of the pitch $p_c$. Input constraints of $\pm\SI{60}{\degree}$ for $e_c$ are added to avoid a collision between the helicopter and the table on which the helicopter is mounted. Since \eqref{eq:problem4_disc_model} needs to be valid at each time step the equaions are added as equality constraints
+\begin{subequations}
+	\begin{align}
+	\vec{A}_{eq}&=\begin{bmatrix}
+	\vec{I} & \vec{0} & \cdots & \cdots & \vec{0} & -\vec{B} & \vec{0} & \cdots &\cdots & \vec{0}\\
+	-\vec{A} & \vec{I} & \ddots & & \vdots & \vec{0} & \ddots & \ddots &  & \vdots\\
+	\vec{0} & \ddots & \ddots & \ddots & \vdots & \vdots & \ddots & \ddots & \ddots &\vdots \\
+	\vdots & \ddots & \ddots & \ddots & \vec{0} & \vdots &  & \ddots & \ddots &\vec{0} \\
+	\vec{0} & \cdots & \vec{0} & -\vec{A} & \vec{I} & \vec{0} & \cdots & \cdots & \vec{0} &-\vec{B}\\
+	\vec{0} & \cdots & \cdots & \cdots & \vec{I} & \vec{0} & \cdots & \cdots & \cdots & \vec{0}\\
+	\end{bmatrix}\\
+	\vec{B}_{eq}&=\begin{bmatrix}
+	\vec{A}\vec{x}_0\\
+	\vec{0}\\
+	\vdots\\
+	\vec{0}\\
+	\vec{x}_f
+	\end{bmatrix}\Comma
+	\end{align}
+\end{subequations}
+with $\vec{x}_f=\begin{bmatrix} 0 & 0 & 0 & 0 & 0 & 0\end{bmatrix}^T$ being the final state at $t=N$. A nonlinear constraint 
+\begin{equation}
+c\mybr{\vec{x}_k}=\alpha \exp\mybr{-\beta\mybr{\lambda_k-\lambda_t}^2}-e_k\leq0 \quad \forall k\in\{1,\ldots,N\}
+\label{eq:problem4_nonlinear_constraint}
+\end{equation}
+with $\alpha=0.2$, $\beta=20$ and $\lambda_t=\frac{2\pi}{3}$, is added. Since \eqref{eq:problem4_nonlinear_constraint} is nonlinear the optimization problem is nonlinear and therefore a nonlinear solver is used. The MATLAB command \verb|fmincon| with three different algorithms is used. The SQP algorithm converges to a solution where the tarjectory of the travel $\lambda$ consists of a single step from $\pi$ to 0, which is unphysical and therefore cannot be used as a reference trajoctory for the helicopter. The active-set method converges to a solution where the input $u_1$ is \SI{83}{\percent} of the time at saturation limit. Although this is only the open loop trajectory it means that when the loop is closed using the LQR the input is still at the saturation limit (assuming that the model is perfect and that there are no disturbances) which means that the control loop is actually open. Because of that the interior-point method is used which results in an trajectory where the input is only \SI{8}{\percent} of the time at the saturation limit. The computation time for calculating the trajectory are \SI{0.33}{\second} for the SQP method, \SI{8.06}{\second} for the active-set method and \SI{53.51}{\second} for the interior-point method, but this is of little concern since the optimization problem doesn't need to be solved online.
+
+The code for calculating the optimal trajectory is shown in \cref{sec:problem4_m}, the nonlinear constraint function can be seen in \cref{sec:constr4_m} and the calculation of the LQR gain matrix is done in \cref{sec:problem4_lqr_m}. The simulink diagram is shown in \cref{fig:problem4_simulink} and \cref{fig:problem4_lqr_simulink}.
+
+The time curve of the helicopter without feedback can be seen in \cref{fig:problem4plots_without_feedback}. As in \cref{sec:prob2} the trajectory of the pitch $p$ is followed, which is due to the pitch control loop which helps to counteract for modeling errors and that a linear model of the nonlinear system is used. The same applies for the elevation control loop which had a reference point of zero in the last two sections and has a trajectory unequal to zero due to the nonlinear constraint \eqref{eq:problem4_nonlinear_constraint} in this section. The reference trajectory of the travel $\lambda$ is not followed satisfactorily. This is the case because the travel $\lambda$ is constrolled in open loop and due to modeling errors the input is not calculated correctly which causes the severe deviations.
 \begin{figure}[htbp]
 	\centering
-	\ProblemFourPlot{../MATLAB/Export/problem4plot_101010_11.csv}{../MATLAB/Export/problem4plots_opt.csv}
-	\caption{problem4plot\_101010\_11}
-	\label{fig:problem4plot_101010_11}%
+	\ProblemFourPlot{../MATLAB/Export/problem4plot_without_feedback.csv}{../MATLAB/Export/problem4plots_opt.csv}
+	\caption{Time curve of inputs and states without using feedback.}
+	\label{fig:problem4plots_without_feedback}%
 \end{figure}
 
-\begin{figure}[htbp]
-	\centering
-	\ProblemFourPlot{../MATLAB/Export/problem4plot_111111_11.csv}{../MATLAB/Export/problem4plots_opt.csv}
-	\caption{problem4plot\_111111\_11}
-	\label{fig:problem4plot_111111_11}%
-\end{figure}
+As in \cref{sec:prob3} an LQR is used as feedback controller. The input is then calculated by
+\begin{equation}
+\vec{u}_t=\vec{u}_t^*-\vec{K}\mybr{\vec{x}_t-\vec{x}_t^*}
+\end{equation}
+with $\vec{u}_t^*$ being the optimal input sequence and $\vec{x}_t^*$ being the optimal trajectory of the states. This new input sequence $\vec{u}$ is then used instead of the optimal input trajectory $\vec{u}_*$ to ensure that the deviations of the desired travel trajectory $\lambda$ is reduced. The weighting matrices 
+\begin{subequations}
+	\begin{align}
+	\vec{Q}&=\mathrm{diag}\mybr{5,1,1,1,1,1}\\
+	\vec{R}&=\mathrm{diag}\mybr{1,1}
+	\end{align}
+\end{subequations}
+are used, which results in a feedback matrix
+\begin{equation}
+\vec{K}=\begin{bmatrix}
+-0.1899  & -0.6725  & -0.7316  &  0.0272  & -0.0000  & -0.0000\\
+0.0000   & 0.0000   & -0.0000  & -0.0000  & 0.0892   & 0.4678
+\label{eq:problem4_lqr}%
+\end{bmatrix}\FullStop
+\end{equation}
+The values for $\vec{Q}$ and $\vec{R}$ are chosen such that the trajectory of the travel $\lambda$ is followed with small deviations and that there are no oscillations. Higher weights on the travel $\lambda$ cause oscillations. Higher weights on the pitch $p$ cause large deviations in the travel, since the controller tries to decrease deviations between the pitch $p$ and the optimal pitch trajectory $p^*$. Higher weights on the input $u_1$ has approximately the same effect as higher weights on the pitch $p$. The weight on the input $u_2$ influences the behaviour only minimally.
 
-\begin{figure}[htbp]
-	\centering
-	\ProblemFourPlot{../MATLAB/Export/problem4plot_211111_11.csv}{../MATLAB/Export/problem4plots_opt.csv}
-	\caption{problem4plot\_211111\_11}
-	\label{fig:}%
-\end{figure}
+The time curve of the helicopter with an LQR as feedback controller is shown in \cref{fig:problem4plot_511111_11}. The deviations from the trajectory of the travel $\lambda$ are much smaller than compared to the ones in \cref{fig:problem4plots_without_feedback}. Apart from that there are less oscillations in the time curve of the elevation $e$. 
+
+The constraint on the elevation is not satsfied perfectly due to the coupling of the pitch $p$ and travel $\lambda$ with the elevation $e$ which is not considered in the simplified model which is used in this laboratory. The optimal input sequences don't incorporate the coupling because of the simplified model and thereby cause the deviations. The decoupling of the simplified model can also be observed in the matrix $\vec{K}$ which has a block diagonal structure. The coupling of the two subsystems can be observed when e.g. the pitch is \SI{90}{\degree}, both turbines have no effect on the elevation since the direction of force and the direction of the elevation angle are orthogonal. A way to improve the performance would be to use a better model for the optimization problem which incorporates the coupling.
+
+The deviations from time curve of the pitch $p$ are larger but they are negligible since the goal is to control the travel $\lambda$ and to satisfy the constraints. Due to the feedback the noise of the measurement can be seen in in the input trajectory. The impulses that can be observed in the input $u_2$ occur because the rates $r$, $\dot{p}$ and $\dot{e}$ are estimated using filters of the type 
+\begin{equation}
+G\mybr{s}=\frac{Ts}{s+T}
+\end{equation}
+which have a differentiating behaviour for frequencies lower than $\omega=\frac{1}{T}$. Since the measurements of $\lambda$, $p$ and $e$ have discrete values a step occurs whenever the value changes which results in an impulse in the velocity estimation.
 
 \begin{figure}[htbp]
 	\centering
 	\ProblemFourPlot{../MATLAB/Export/problem4plot_511111_11.csv}{../MATLAB/Export/problem4plots_opt.csv}
-	\caption{problem4plot\_511111\_11}
+	\caption{Time curve of inputs and states while using \eqref{eq:problem4_lqr} as feedback controller.}
 	\label{fig:problem4plot_511111_11}%
 \end{figure}
 
-\begin{figure}[htbp]
-	\centering
-	\ProblemFourPlot{../MATLAB/Export/problem4plot_10011111_11.csv}{../MATLAB/Export/problem4plots_opt.csv}
-	\caption{problem4plot\_10011111\_11}
-	\label{fig:problem4plot_10011111_11}%
-\end{figure}
+To improve the optimal trajectory constraints on $r$ and $\dot{e}$ are introduced. The constraints are
+\begin{subequations}
+	\begin{align}
+	-0.15&\leq r\leq0.15\\
+	-0.12&\leq e\leq0.12\FullStop
+	\end{align}
+	\label{eq:problem4_additional_constraints}%
+\end{subequations}
+The time curve with additional constraints on $r$ and $\dot{e}$ is shown in \cref{fig:LQR_bothconstraint_N=100_LQR}. The number of steps N is increased to 100 to get a feasible solution.  The reason behind this is that there needs to be a certain speed $r$ if the objective is to move from $\pi$ to 0 within N steps. The increased number of steps cause the computation time to rise to \SI{2100}{\second} compared to \SI{50}{\second} which are needed for computation of the trajectory in \cref{fig:problem4plots_without_feedback} and \cref{fig:problem4plot_511111_11}. The deviations of the optimal travel $\lambda$ trajectory are smaller than in \cref{fig:problem4plot_511111_11}, although some oscillation occur which are caused by a too large gain in the $\vec{K}$ matrix, so a smaller weight on 
 
-\begin{figure}[htbp]
-	\centering
-	\ProblemFourPlot{../MATLAB/Export/problem4plot_21100111_11.csv}{../MATLAB/Export/problem4plots_opt.csv}
-	\caption{problem4plot\_21100111\_11}
-	\label{fig:problem4plot_21100111_11}%
-\end{figure}
 
-\begin{figure}[htbp]
-	\centering
-	\ProblemFourPlot{../MATLAB/Export/problem4plot_100110111_11.csv}{../MATLAB/Export/problem4plots_opt.csv}
-	\caption{problem4plot\_100110111\_11}
-	\label{fig:problem4plot_100110111_11}%
-\end{figure}
 
 \begin{figure}[htbp]
 	\centering
-	\ProblemFourPlot{../MATLAB/Export/problem4plot_111111_1001.csv}{../MATLAB/Export/problem4plots_opt.csv}
-	\caption{problem4plot\_111111\_1001}
-	\label{fig:problem4plot_111111_1001}%
+	\ProblemFourPlot{../MATLAB/Export/problem4_LQR_bothconstraint_N=100_LQR[5,1,1,1,1,1].csv}{../MATLAB/Export/problem4plots_LQR_bothconstraint_N=100_LQR[5,1,1,1,1,1]_opt.csv}
+	\caption{Time curve of inputs and states while using the optimal trajectory with additional constraints \eqref{eq:problem4_additional_constraints}.}
+	\label{fig:LQR_bothconstraint_N=100_LQR}%
 \end{figure}
-
-\begin{figure}[htbp]
-	\centering
-	\ProblemFourPlot{../MATLAB/Export/problem4plot_111111_1100.csv}{../MATLAB/Export/problem4plots_opt.csv}
-	\caption{problem4plot\_111111\_1100}
-	\label{fig:problem4plot_111111_1100}%
-\end{figure}
-
-\begin{figure}[htbp]
-	\centering
-	\ProblemFourPlot{../MATLAB/Export/problem4plot_without_feedback.csv}{../MATLAB/Export/problem4plots_opt.csv}
-	\caption{problem4plots\_without\_feedback}
-	\label{fig:problem4plots_without_feedback}%
-\end{figure}
-
-\begin{figure}[htbp]
-	\centering
-	\ProblemFourPlot{../MATLAB/Export/problem4plot_111111_11_opt_ed_1_lambdad_1.csv}{../MATLAB/Export/problem4plots_opt.csv}
-	\caption{problem4plot\_111111\_11\_opt\_ed\_1\_lambdad\_1}
-	\label{fig:problem4plot_111111_11_opt_ed_1_lambdad_1}%
-\end{figure}
-
-\begin{figure}[htbp]
-	\centering
-	\ProblemFourPlot{../MATLAB/Export/problem4plot_111111_11_opt_ed_1_pd_1.csv}{../MATLAB/Export/problem4plots_opt.csv}
-	\caption{problem4plot\_111111\_11\_opt\_ed\_1\_pd\_1}
-	\label{fig:problem4plot_111111_11_opt_ed_1_pd_1}%
-\end{figure}
-
-
-
-
-\subsection{Results and Discussion}
-Each of the four problems should have their own discussion of results. 
 

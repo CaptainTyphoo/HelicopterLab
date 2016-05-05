@@ -1,2 +1,13 @@
 \section{Conclusion}\label{sec:conclusion}
-Again, this does not have to be long, but try to write a few reasonable closing remarks.
+
+Using the modeled helicopter at the lab. We were able to try to control the helicopter with the different approaches stated from before. 
+
+When using only an optimal input sequence with no feedback we would get quite an unstable system as seen in the result above. The reason why this did not work so well is because the model we use for the helicopter is quite simplified and does not reflect all the coupling and dynamics of the system being controlled.
+
+However when we used an optimal input sequence combined with control theory using an LQR in a feedback loop our results drastically improved our results. Also this solution did not require a long computation time as, but sacrifices the ability to impose hard constraints on input and states as the LQR does not limit its output.
+
+Therefor if we need constraints on the feedback a solution would be to use an MPC. However it would be a lot more computational intensive and would require better/faster or specialized hardware to work seamlessly.
+
+%OLD
+%Again, this does not have to be long, but try to write a few reasonable closing remarks.
+

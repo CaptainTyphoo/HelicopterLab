@@ -1,5 +1,4 @@
 %% Optimal control of Pitch/Travel with Feedback(LQ)
-init01;
 problem2;
 
 % [lambda r p p_dot]

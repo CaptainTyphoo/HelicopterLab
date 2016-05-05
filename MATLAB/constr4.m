@@ -1,7 +1,5 @@
 function [ c, ceq ] = constr4( x )
-%UNTITLED4 Summary of this function goes here
-%   Detailed explanation goes here
-%global N mx;
+
     N = 60;
     mx = 6;
     alpha = 0.2;

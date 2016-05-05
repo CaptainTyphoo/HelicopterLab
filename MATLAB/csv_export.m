@@ -127,3 +127,96 @@ for i = 1:numel(name1)
       {'t','u1','u2','lambda','p','e','u1opt','u2opt'},0,0);
 
 end
+
+%% problem 4 second round
+
+ratio = 5;
+name1 = {
+    'NoLQR',
+    'NoLQR_bothconstraints',
+    'NoLQR_noAdditionalConstraintsN=60',
+    'NoLQR_onlyedotN=40',
+    'NoLQR_onlylambdadotN=60',
+    };
+name2 = {
+    'elevation4.mat',
+    'input4.mat',
+    'pitch4.mat',
+    'travel4.mat',
+    'optinput4.mat'
+    };
+for i = 1:numel(name1)
+    i=name1{i}
+    for k = 1:numel(name2)
+        filename = strcat('./helicopter4/',i,'/',name2{k});
+        load(filename)
+    end
+    
+    csvwrite_with_headers(strcat('./Export/problem4_',i,'.csv'),...
+      downsample([input4(1,:)',input4(2,:)',input4(3,:)',travel4(2,:)',pitch4(2,:)',...
+      elevation4(2,:)',optinput4(2,:)',optinput4(3,:)'],ratio),...
+      {'t','u1','u2','lambda','p','e','u1opt','u2opt'},0,0);
+
+end
+
+%% problem 4 third round
+
+ratio = 5;
+name1 = {
+    'LQR_bothconstraintsN=60',
+    'LQR_noadditionalN=40_active-set_t=8.0595s',
+    'LQR_noadditionalN=40_sqp_t=0.33s',
+    'LQR_noadditionalN=60',
+    'LQR_onlyedotN=40',
+    'LQR_onlylambdadotN=60_time_to_complete=553.53s',
+    'LQR_onlylamdadotN=40_sqp_time=0.30s',
+    'LQR_onlylamdadotN=60_sqp_time=0.4186s',
+    };
+name2 = {
+    'elevation4.mat',
+    'input4.mat',
+    'pitch4.mat',
+    'travel4.mat',
+    'optinput4.mat'
+    };
+for i = 1:numel(name1)
+    i=name1{i}
+    for k = 1:numel(name2)
+        filename = strcat('./helicopter4/',i,'/',name2{k});
+        load(filename)
+    end
+    
+    csvwrite_with_headers(strcat('./Export/problem4_',i,'.csv'),...
+      downsample([input4(1,:)',input4(2,:)',input4(3,:)',travel4(2,:)',pitch4(2,:)',...
+      elevation4(2,:)',optinput4(2,:)',optinput4(3,:)'],ratio),...
+      {'t','u1','u2','lambda','p','e','u1opt','u2opt'},0,0);
+
+end
+
+%% problem 4 fourth round
+
+ratio = 5;
+name1 = {
+    'LQR_bothconstraint_N=100_LQR[5,1,1,1,1,1]',
+    
+    };
+name2 = {
+    'elevation4.mat',
+    'input4.mat',
+    'pitch4.mat',
+    'travel4.mat',
+    'optinput4.mat'
+    };
+for i = 1:numel(name1)
+    i=name1{i}
+    for k = 1:numel(name2)
+        filename = strcat('./helicopter4/',i,'/Data/ran35s_prettysure_it_was_ran_correctly/helicopter4/',name2{k});
+        load(filename)
+    end
+    
+    csvwrite_with_headers(strcat('./Export/problem4_',i,'.csv'),...
+      downsample([input4(1,:)',input4(2,:)',input4(3,:)',travel4(2,:)',pitch4(2,:)',...
+      elevation4(2,:)',optinput4(2,:)',optinput4(3,:)'],ratio),...
+      {'t','u1','u2','lambda','p','e','u1opt','u2opt'},0,0);
+
+end
