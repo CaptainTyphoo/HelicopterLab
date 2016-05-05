@@ -11,46 +11,13 @@ As long as the helicopter is following the optimal trajectory $x_k^*$ only the o
 \end{equation}
 The weighting matrices $Q$ and $R$ will influence the behaviour of the feedback control. Higher values in the $Q$-matrix will punish deviations from the optimal trajectory harder while higher values in the $R$-matrix will punish the usage of the manipulated variable. The optimal $K$-matrix was found by using the \texttt{dqlr}-function from $\mathrm{MATLAB}$. 
 \subsection{Results}\label{sec:prob32}
-Different values for $Q$ and $R$ were implemented. The results are shown in the Figures (\ref{fig:problem3plot_1010_1}) to (\ref{fig:problem3_LQR[10,1,5,0]}) \\
-The best fit to the optimal trajectory could be attained by the weighting displayed in Figure \ref{fig:problem3_LQR[10,1,5,0]}. Due to the closed feedback loop most variations of $Q$ and $R$ remain at the terminal point. Though in some cases there is still some movement of the helicopter visible (compare Figure \ref{fig:problem3plot_1050_1} and \ref{fig:problem3_LQR[1,0,10,10]}) or the helicopter does not reach the terminal point at all (compare Figure \ref{fig:problem3_LQR[1,0,10,10]} and \ref{fig:problem3_LQR[5,0,0,5]}). For most tested variations there appear oscillations in the pitch. Exceptional cases can be seen in Figure \ref{problem3_LQR[1,0,10,0]}, \ref{Results for $Q=[1,0,10,10]$ and $R=0.5$} and \ref{fig:problem3_LQR[5,0,0,5]}. Although the movement in pitch seems to be more controlled in these cases, they are amongst the worst options considering the deviation of the measured traveling from the optimal trajectory.
+Different values for $Q$ and $R$ were implemented. Some of the results are shown in the Figures (\ref{fig:problem3_LQR[1,0,10,10]}) and (\ref{fig:problem3_LQR[10,1,5,0]}) \\
+The best fit to the optimal trajectory could be attained by the weighting displayed in Figure \ref{fig:problem3_LQR[10,1,5,0]}. Due to the closed feedback loop most variations of $Q$ and $R$ remain at the terminal point. Though in some cases there is still some movement of the helicopter visible or the helicopter does not reach the terminal point at all (compare Figure \ref{fig:problem3_LQR[1,0,10,10]}). For most tested variations there appear oscillations in the pitch.An exceptional case can be seen in Figure \ref{Results for $Q=[1,0,10,10]$ and $R=0.5$}. Although the movement in pitch seems to be more controlled in these cases, they are amongst the worst options considering the deviation of the measured traveling from the optimal trajectory.
 
 \subsection{Comparison to Model Predictive Control}\label{sec:prob33}
 
-\begin{figure}[htbp]
-	\centering
-	\ProblemThreePlot{../MATLAB/Export/problem3plot_1010_1.csv}{../MATLAB/Export/problem2plots_q_10_opt.csv}
-	\caption{Results for $Q=[1,0,1,0]$ and $R=1$}
-	\label{fig:problem3plot_1010_1}
-\end{figure}
-
-\begin{figure}[htbp]
-	\centering
-	\ProblemThreePlot{../MATLAB/Export/problem3plot_1050_1.csv}{../MATLAB/Export/problem2plots_q_10_opt.csv}
-	\caption{Results for $Q=[1,0,5,0]$ and $R=1$}
-	\label{fig:problem3plot_1050_1}
-\end{figure}
-
-\begin{figure}[htbp]
-	\centering
-	\ProblemThreePlot{../MATLAB/Export/problem3plot_5010_1.csv}{../MATLAB/Export/problem2plots_q_10_opt.csv}
-	\caption{Results for $Q=[5,0,1,0]$ and $R=1$}
-	\label{fig:problem3plot_5010_1}
-\end{figure}
-
-\begin{figure}[htbp]
-	\centering
-	\ProblemThreePlot{../MATLAB/Export/problem3plot_10150_0.5.csv}{../MATLAB/Export/problem2plots_q_10_opt.csv}
-	\caption{Results for $Q=[1,0,15,0]$ and $R=0.5$}
-	\label{fig:problem3plot_10150_0.5}
-\end{figure}
 
 
-\begin{figure}[htbp]
-	\centering
-	\ProblemThreePlot{../MATLAB/Export/problem3_LQR[1,0,10,0].csv}{../MATLAB/Export/problem2plots_q_10_opt.csv}
-	\caption{Results for $Q=[1,0,10,0]$ and $R=0.5$}
-	\label{fig:problem3_LQR[1,0,10,0]}
-\end{figure}
 
 \begin{figure}[htbp]
 	\centering
@@ -59,12 +26,6 @@ The best fit to the optimal trajectory could be attained by the weighting displa
 	\label{fig:problem3_LQR[1,0,10,10]}
 \end{figure}
 
-\begin{figure}[htbp]
-	\centering
-	\ProblemThreePlot{../MATLAB/Export/problem3_LQR[5,0,0,5].csv}{../MATLAB/Export/problem2plots_q_10_opt.csv}
-	\caption{Results for $Q=[5,0,0,5]$ and $R=0.5$}
-	\label{fig:problem3_LQR[5,0,0,5]}
-\end{figure}
 
 \begin{figure}[htbp]
 	\centering
