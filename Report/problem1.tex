@@ -1,28 +1,19 @@
 \section{Repetition/Introduction to Simulink/QuaRC}\label{sec:prob1}
-This section should not be very long.
+%<<<<<<< HEAD
 
-If you want, you can use the source for Table~\ref{tab:parameters} to see how a (floating) table is made. 
+%=======
+Simulink is a program for Model-Based Design. It overtakes the code from Matlab, compiles it into the C language and sends it to the right controllers. QuaRC\footnote{\url{http://www.quarcservice.com/ReleaseNotes/files/quarc_user_guide.html}} is a Real-Time control system, that is integrated into Simulink. To control the program, Matlab and Simulink is used. We use QuaRC for the build option as can be shown on figure \ref{fig:simDiag}. 
+The work flow is that we first build the program. In Simulink is than the Matlab code compiled to the C language with Visual C++. Then the code is downloaded to QuaRC. We have also to set the following parameters, if we already didn't do so, like buffer size, sampling frequency. After this, the helicopter can be started. We assure that the power button at the helicopter is on and on the computer we can push Start. After the flight, we can compare the expected flight from the real flight in a Matlab figure. The realtime measurments will always be shown up as a piece wise constant function. 
 
-Variables and symbols are always in italics, while units are not.
-
-\begin{table}[tbp]
-	\centering
-	\caption{Parameters and values.}
-	\begin{tabular}{llls}
-		\hline
-		Symbol & Parameter & Value & Unit \\
-		\hline
-		$l_a$ & Distance from elevation axis to helicopter body & $0.63$ & \meter \\
-		$l_h$ & Distance from pitch axis to motor & $0.18$ & \meter \\
-		$K_f$ & Force constant motor & $0.25$ & \newton\per\volt \\
-		$J_e$ & Moment of inertia for elevation & $0.83$ & \kilogram\square\meter \\
-		$J_t$ & Moment of inertia for travel & $0.83$ & \kilogram\square\meter \\
-		$J_p$ & Moment of inertia for pitch & $0.034$ & \kilogram\square\meter \\
-		$m_h$ & Mass of helicopter & $1.05$ & \kilogram \\
-		$m_w$ & Balance weight & $1.87$ & \kilogram \\
-		$m_g$ & Effective mass of the helicopter & $0.05$ & \kilogram \\
-		$K_p$ & Force to lift the helicopter from the ground & $0.49$ & \newton \\
-		\hline
-	\end{tabular}
-	\label{tab:parameters}
-\end{table}
+\begin{figure}[H]
+	\includegraphics[width=\textwidth]{simulinkDiag.png}
+	\caption{A diagram of a Simulink work flow \citep{NTNU2014}}
+	\label{fig:simDiag}
+\end{figure} 
+%\begin{figure}[h]
+%\includegraphics[\textwidth]{simulinkDiag.png}
+%\caption{A diagram in Simulink.}
+%\label{fig:simDiag}
+%\end{figure}  
+%>>>>>>> 1cbf6bd27ed03dea8337254823d98415706fdb03
+%If you decide to include a figure, that's great. You can in general copy figures from the textbook, the assignement text, or other places. However: ALWAYS CITE THE SOURCE.

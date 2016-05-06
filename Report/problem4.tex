@@ -1,12 +1,12 @@
 \section{Optimal Control of Pitch/Travel and Elevation with and without Feedback}\label{sec:prob4}
-In this part of the excersice a constraint on the elevation is added. Therefore the equation describing the dynamics of the elevation $e$ from \eqref{} must be added to the state space representation of the model of the helicopter
+In this part of the excersice a constraint on the elevation is added. Therefore the equation describing the dynamics of the elevation $e$ from \eqref{eq:model_al} must be added to the state space representation of the model of the helicopter
 \begin{subequations}
 	\begin{equation}
 	\frac{\d\vec{x}}{\d t}=\vec{A}_c\vec{x}+\vec{B}_c\vec{u}
 	\end{equation}
 	with
 	\begin{align}
-	\vec{A}&=\begin{bmatrix}
+	\vec{A}_c&=\begin{bmatrix}
     0 & 1 & 0 & 0 & 0 & 0\\ 
 	0 & 0 & -K_2 & 0 & 0 & 0\\ 
 	0 & 0 & 0 & 1 & 0 & 0\\ 
@@ -14,7 +14,7 @@ In this part of the excersice a constraint on the elevation is added. Therefore 
 	0 & 0 & 0 & 0 & 0 & 1\\
 	0 & 0 & 0 & 0 & -K_3*K_{ep} & -K_3*K_{ed}
 	\end{bmatrix}\\
-	\vec{B}&=\begin{bmatrix}
+	\vec{B}_c&=\begin{bmatrix}
 	0 & 0\\ 
 	0 & 0\\ 
 	0 & 0\\ 
