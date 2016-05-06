@@ -92,6 +92,9 @@ Additionally the following constraint on the input value was implemented:
 	|p_k|\leq \frac {30\pi} {180}, \quad k \in \{1, \dots,N\}
 \end{equation}
 The constraint prevents the helicopter from flying rather extreme manoeuvres where the pitch angle exceeds 30\textdegree and thus contributes to the overall safety of the equipment and the laboratory staff. Since the cost function is quadratic in both variables, the pitch input and the deviation of the position from the terminal point, it can be solved by quadratic programming algorithms. Though the helicopters position will always be compared to the terminal point. This may result in fast helicopter movement and aggressive steering, which can be hard to handle due to the helicopter's momentum. High pitch angles may also exceed the area in which the system equation are sufficiently accurate since they rely on small angle approximations. Also aggressive inputs on the pitch control may cause the pitch angle to exceed the constraints due to the momentum of the helicopter.
+
+The MATLAB code can be seen in \cref{sec:problem2_m} and the Simulink diagram can be seen in \cref{fig:problem2_simulink}.
+
 \subsection{Results of the optimization}\label{sec:prob25}
 To solve the optimization problem the $\mathrm{MATLAB}$ function \texttt{quadprog} was used. Values of 0.1, 1, and 10 were chosen for the weighting factor $q$. 5 seconds of zeroes were added before and after the control sequence in order to give the helicopter some time to stabilise. The results were exported from $\mathrm{MATLAB}$ and are depicted in the Figures (\ref{fig:problem2plots_q_1.0}),  (\ref{fig:problem2plots_q_0.1}) and  (\ref{fig:problem2plots_q_10}).
 \begin{figure}[h]
