@@ -1,8 +1,18 @@
 \section{Discussion}\label{sec:discussion}
-A section like this does not have to be long, but write a few short paragraphs that show you understand what you have been doing and how the different results relate to each other.
 
 \subsection{Optimal control without feedback}
+When controlling the helicopter using optimal control without feedback. The Estimated optimal input sequence would yield quite a poor preformance as the actual travel deviates a lot from the optimal travel. It overshoots and doesn't enter a steady state such as the optimal input predicts it should. This is caused by the linearization and simplicity of the model causing modelling and linearization errors to become to large. Optimal inputs such as Pitch and elevation were followed better than with feedback this is of course due to not being altered by the LQR. 
+
+The inputs were however limited correctly and does not exceed their constraints. So if you need strict limitations on inputs you would have to go with either open-loop or an MPC.
+
 
 \subsection{Optimal control with feedback}
+Yielded better preformance than the open-loop. This is due to modelling and lineraization errors being corrected by the LQR layer. However the LQR makes it so that the helicopter isn't following it's optimal input as closly as in the open-loop. However it follows the intended travel path much closer than with the open-loop and it's able to enter a steady state not causing the helicopter to drift away from the set point. We ended up peanlizing deviations from travel/trajectory more than pitch and elivation to ensure it followed the intended path.
+Adding elvation and not just the pitch and travel to the optimal control input we were able to improve the following of the optimal travel and elevation. However the pitch would then follow its optimal input even less.
+Also another problem were that we could not guarantee that the final input no longer were guaranteed to be within the constraints set by the optimization problem. This is due to the LQR not being able to limit the inputs used. Therfor adding more constraints did improve a bit on the open-loop preformance but had neglectible impact on the preformance of the closed-loop system.
+We also discovered using different types of SQP algorithms for calculating the QP had a significant impact on the calculation time and precision of the solution and the active-set algorithm yielded the best preformance with decent accuracy for this problem. While the inter-point algorithm that is default had better accuracy but were painfully slow.
 
-\subsection{MPC vs  LQR}
+\subsection{MPC vs LQR}
+As more powerful hardware is getting cheaper an NMPC would be more feasible in the future and could potentially yield better preformance than calculating the optimal input trajectory before hand and just sending it in as input using an LQR. Also an NMPC would be able to enforce constraints on the states/inputs of the system better than an LQR with calculated optimal trajectory.
+
+Also an MPC  would yield a better preformance than the open-loop optimal control. As you would have implicite feedback by calculating the trajectory from the previous state within the time window of the MPC.
