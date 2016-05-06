@@ -16,7 +16,14 @@ The best fit to the optimal trajectory could be attained by the weighting displa
 
 \subsection{Comparison to Model Predictive Control}\label{sec:prob33}
 
+An alternative strategy would be to use an MPC controller. This could be implemented calculating a solution of a numerical optimization problem corresponding to a finit-horizon optimal control problem at each sampling instant. Using the current state computing the optimal trajectory from the current state to the targeted state given a finite window of time. This would mean that only the first window/initial state of the optimal control would be used and the rest would be calcualted on the fly using the same method.(Foss and N. Heirung 2014)
 
+The concept of optimal control, and in particular its practical implementation in terms of Nonlinear Model Predictive Control (NMPC) is an attractive alternative since the complexity of the control design and specification increases moderately with the size and complexity of the system. In particular for systems that can be adequately modeled with linear models, MPC has become the de-facto standard advanced control method in the process industries (Qin and Badgwell (1996)).
+( S. J. WRIGHT, Applying new optimization algorithms to model predictive control, in Chemical Process Control-V, J. C. Kantor, ed., CACHE, 1997)
+
+However this is still an emerging field in UAV and Aerial application this is due to the computational expensiveness of the MPC as a QP problem would use a lot more time pr. iteration than just an LQR. The nonlinear programming problem may have multiple local minima and will demand a much larger number of computations at each sample, even without providing any hard guarantees on the solution. Hence, NMPC is currently not a panacea that can be plugged in to solved any control problem. (Tor A. Johansen Introduction to Nonlinear Model Predictive Control and Moving Horizon Estimation 2007) Also to have good control in Aerial applications you would have to have a very short window/time-step which increases computation time again. An MPC with longer time steps would yield worse preformance than the LQR due to the fast dynamics of the system.
+
+Also any deviation from the optimal trajectory is likely caused by an incomplete model of the system due to simplification. Or due to unmodeled external distrubances such as wind or drag. An MPC controller would have a hard time handeling it if not modelled.
 
 
 \begin{figure}[htbp]
